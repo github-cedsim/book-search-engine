@@ -1,14 +1,69 @@
 body {
-  font-family: 'Rubik', sans-serif;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Rubik Mono One', sans-serif;
+.container {
+  width: 80%;
+  margin: auto;
+  overflow: hidden;
+}
+
+.header {
+  background: #333;
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #444;
+  padding: 10px;
+  color: white;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+}
+
+.nav-links li {
+  margin: 0 10px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.book-card {
+  background: white;
+  margin: 10px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.book-card img {
+  max-width: 100px;
+  margin-right: 20px;
+}
+
+.book-card .content {
+  display: flex;
+}
+
+.book-card h3 {
+  margin-top: 0;
 }
 
 .small {

@@ -1,91 +1,57 @@
+// client/src/pages/SearchBooks.jsx
+
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import { SAVE_BOOK } from '../utils/mutations';
-import { searchGoogleBooks } from '../utils/API';
-import Auth from '../utils/auth';
+import { useQuery } from '@apollo/client';
+import { QUERY_BOOKS } from '../utils/queries';
+import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 
 const SearchBooks = () => {
-  const [saveBook] = useMutation(SAVE_BOOK);
-  const [searchedBooks, setSearchedBooks] = useState([]);
   const [searchInput, setSearchInput] = useState('');
 
-  const handleFormSubmit = async (event) => {
+  const { loading, data } = useQuery(QUERY_BOOKS, {
+    variables: { title: searchInput },
+    skip: !searchInput,
+  });
+
+  const handleFormSubmit = (event) => {
     event.preventDefault();
-
-    if (!searchInput) {
-      return false;
-    }
-
-    try {
-      const response = await searchGoogleBooks(searchInput);
-
-      if (!response.ok) {
-        throw new Error('Something went wrong!');
-      }
-
-      const { items } = await response.json();
-
-      const bookData = items.map((book) => ({
-        bookId: book.id,
-        authors: book.volumeInfo.authors || ['No author to display'],
-        title: book.volumeInfo.title,
-        description: book.volumeInfo.description,
-        image: book.volumeInfo.imageLinks?.thumbnail || '',
-        link: book.volumeInfo.infoLink,
-      }));
-
-      setSearchedBooks(bookData);
-      setSearchInput('');
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleSaveBook = async (bookId) => {
-    const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-
-    if (Auth.loggedIn()) {
-      try {
-        const { data } = await saveBook({
-          variables: { ...bookToSave },
-        });
-
-        // Update saved books in state if needed
-
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      console.log('Please log in to save books.');
-    }
+    // The query will automatically run because of the useQuery hook
   };
 
   return (
-    <>
-      <div className="search-form">
-        <form onSubmit={handleFormSubmit}>
-          <input
-            type="text"
-            placeholder="Search for a book"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-          <button type="submit">Submit Search</button>
-        </form>
-      </div>
+    <Container>
+      <form onSubmit={handleFormSubmit}>
+        <input
+          type="text"
+          placeholder="Search for a book"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <Button type="submit">Submit Search</Button>
+      </form>
 
-      <div className="results">
-        {searchedBooks.map((book) => (
-          <div key={book.bookId}>
-            <h3>{book.title}</h3>
-            <p>{book.description}</p>
-            <button onClick={() => handleSaveBook(book.bookId)}>
-              Save This Book!
-            </button>
-          </div>
-        ))}
-      </div>
-    </>
+      {loading ? (
+        <h2>Loading...</h2>
+      ) : (
+        <Row>
+          {data?.books?.map((book) => (
+            <Col key={book._id} md="4">
+              <Card border="dark">
+                {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant="top" /> : null}
+                <Card.Body>
+                  <Card.Title>{book.title}</Card.Title>
+                  <p className="small">Authors: {book.authors.join(', ')}</p>
+                  <Card.Text>{book.description}</Card.Text>
+                  <Button href={book.link} target="_blank">
+                    View Book
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
+    </Container>
   );
 };
 

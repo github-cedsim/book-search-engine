@@ -1,47 +1,47 @@
 import React from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_ME } from '../utils/queries';
-import { REMOVE_BOOK } from '../utils/mutations';
+import { useQuery } from '@apollo/client';
+import { QUERY_ME } from '../utils/queries';
+import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import Auth from '../utils/auth';
 
 const SavedBooks = () => {
-  const { loading, data } = useQuery(GET_ME);
-  const [removeBook] = useMutation(REMOVE_BOOK);
+  const { loading, data } = useQuery(QUERY_ME);
 
   const userData = data?.me || {};
 
   const handleDeleteBook = async (bookId) => {
-    try {
-      const { data } = await removeBook({
-        variables: { bookId },
-      });
-
-      // Update user data in state if needed
-
-    } catch (err) {
-      console.error(err);
-    }
+    // Logic to handle book deletion
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <h2>Loading...</h2>;
   }
 
   return (
-    <div>
-      <h2>Saved Books</h2>
-      <div>
-        {userData.savedBooks.map((book) => (
-          <div key={book.bookId}>
-            <h3>{book.title}</h3>
-            <p>{book.description}</p>
-            <button onClick={() => handleDeleteBook(book.bookId)}>
-              Remove This Book
-            </button>
-          </div>
+    <Container>
+      <h2>
+        {userData.savedBooks?.length
+          ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
+          : 'You have no saved books!'}
+      </h2>
+      <Row>
+        {userData.savedBooks?.map((book) => (
+          <Col key={book.bookId} md="4">
+            <Card border="dark">
+              {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant="top" /> : null}
+              <Card.Body>
+                <Card.Title>{book.title}</Card.Title>
+                <p className="small">Authors: {book.authors.join(', ')}</p>
+                <Card.Text>{book.description}</Card.Text>
+                <Button className="btn-block btn-danger" onClick={() => handleDeleteBook(book.bookId)}>
+                  Delete this Book!
+                </Button>
+              </Card.Body>
+            </Card>
+          </Col>
         ))}
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 };
 
