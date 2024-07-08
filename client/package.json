@@ -8,7 +8,8 @@
     "start": "vite",
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "serve": "vite preview",
+    "install": "npm install"
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
