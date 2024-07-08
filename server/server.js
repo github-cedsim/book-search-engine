@@ -25,15 +25,14 @@ async function startServer() {
 
   if (process.env.NODE_ENV === 'production') {
     const staticPath = path.join(process.cwd(), 'client', 'dist');
-    const indexPath = path.join(staticPath, 'index.html');
-
     app.use(express.static(staticPath));
 
     app.get('*', (req, res) => {
+      const indexPath = path.join(staticPath, 'index.html');
       fs.access(indexPath, fs.constants.F_OK, (err) => {
         if (err) {
-          console.error('Index file does not exist', err);
-          res.status(404).send('Index file not found');
+          console.error(`${indexPath} does not exist or cannot be accessed`);
+          res.status(404).send('index.html not found');
         } else {
           res.sendFile(indexPath);
         }
