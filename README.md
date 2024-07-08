@@ -12,12 +12,13 @@ Book Search Engine is a full-stack web application that allows users to search f
 
 ## Screenshot
 
-[image](https://github.com/github-cedsim/book-search-engine/assets/126218396/7a7aa366-2736-4c45-a870-6f308caedc02)
+![image](https://github.com/github-cedsim/book-search-engine/assets/126218396/d5ec5ae8-72a3-492a-8f0a-864bcffe4136)
+
 
 
 ## Link to Deployed Application
 
-![image](https://github.com/github-cedsim/book-search-engine/assets/126218396/41824f59-1ebf-44b5-8ada-685501e428a7)
+https://github.com/github-cedsim/book-search-engine.git
 
 
 ## Installation
