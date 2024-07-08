@@ -14,7 +14,6 @@ async function startServer() {
     typeDefs,
     resolvers,
     context: authMiddleware,
-    cache: 'bounded',  // Updated to use bounded cache
   });
 
   await server.start();
@@ -24,12 +23,11 @@ async function startServer() {
   app.use(express.json());
 
   if (process.env.NODE_ENV === 'production') {
-    // Serve static files from the correct location
-    app.use(express.static(path.join(__dirname, '../client/dist')));
+    // Serve static files from the client/dist directory
+    app.use(express.static(path.resolve(__dirname, '../client/dist')));
 
-    // Add a catch-all route to serve index.html for all paths
     app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+      res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
     });
   }
 
