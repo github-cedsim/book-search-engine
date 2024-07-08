@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 const { ApolloServer } = require('apollo-server-express');
 const db = require('./config/connection');
 const { typeDefs, resolvers } = require('./schemas');
@@ -24,19 +23,11 @@ async function startServer() {
   app.use(express.json());
 
   if (process.env.NODE_ENV === 'production') {
-    const staticPath = path.join(process.cwd(), 'client', 'dist');
+    const staticPath = path.join(__dirname, '../client/dist');
     app.use(express.static(staticPath));
 
     app.get('*', (req, res) => {
-      const indexPath = path.join(staticPath, 'index.html');
-      fs.access(indexPath, fs.constants.F_OK, (err) => {
-        if (err) {
-          console.error(`${indexPath} does not exist or cannot be accessed`);
-          res.status(404).send('index.html not found');
-        } else {
-          res.sendFile(indexPath);
-        }
-      });
+      res.sendFile(path.join(staticPath, 'index.html'));
     });
   }
 
