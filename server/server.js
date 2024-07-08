@@ -23,10 +23,11 @@ async function startServer() {
   app.use(express.json());
 
   if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.resolve(__dirname, '../client/dist')));
+    const staticPath = path.join(process.cwd(), 'client', 'dist');
+    app.use(express.static(staticPath));
 
     app.get('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+      res.sendFile(path.join(staticPath, 'index.html'));
     });
   }
 
