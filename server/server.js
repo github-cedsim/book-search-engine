@@ -23,10 +23,20 @@ async function startServer() {
   app.use(express.json());
 
   if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '/client/dist')));
+    const staticPath = path.join(__dirname, '../client/dist');
+    const indexPath = path.join(staticPath, 'index.html');
+    console.log(`Serving static files from: ${staticPath}`);
+    console.log(`Serving index.html from: ${indexPath}`);
+
+    app.use(express.static(staticPath));
 
     app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '/client/dist/index.html'));
+      res.sendFile(indexPath, (err) => {
+        if (err) {
+          console.error('Error sending index.html:', err);
+          res.status(500).send(err);
+        }
+      });
     });
   }
 
