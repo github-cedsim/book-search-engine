@@ -9,7 +9,7 @@
     "install": "cd server && npm i && cd ../client && npm i",
     "build": "cd client && npm run build",
     "render-build": "npm install && npm run generate",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run generate --prefix client"
   },
   "keywords": [],
   "author": "",
